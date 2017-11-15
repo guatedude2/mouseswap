@@ -9,7 +9,7 @@ const packageJson = require('./package.json');
 
 let tray = null;
 
-debug(`starting mouseswap VERSION: ${packageJson.version}`);
+debug(`starting mouseswap VERSION:${packageJson.version}`);
 
 const settings = {
   uuid: '0fade7e0-2211-4ba4-a4e8-1ca6a961c4eb',
