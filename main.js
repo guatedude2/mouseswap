@@ -13,7 +13,7 @@ const devices = [{
 }];
 
 // app.dock.hide();
-ssdp.start();
+ssdp.start(devices[0].name);
 app.on('ready', () => {
   tray = new TrayMenu(devices);
 
