@@ -1,4 +1,4 @@
-
+const debug = require('debug')('mouseswap:tray');
 const path = require('path');
 const { Tray, Menu } = require('electron');
 const EventEmitter = require('events');
@@ -11,6 +11,7 @@ module.exports = class TrayMenu extends Tray {
     super(NORMAL_ICON);
     this.devices = [];
     this.events = new EventEmitter();
+    debug('loading tray');
     this.setPressedImage(PRESSED_ICON);
     this.setToolTip('Mouseswap');
     this.setContextMenu(Menu.buildFromTemplate([
@@ -33,10 +34,7 @@ module.exports = class TrayMenu extends Tray {
     this.events.on('quit', callback);
   }
 
-  addDevice(device) {
-    if (!this.devices.find((dev) => dev.uuid == device.uuid)) {
-      this.devices.push(device);
-    }
+  updateDevices() {
     this.setContextMenu(Menu.buildFromTemplate([
       ...this.devices.map((device) => ({
         device,
@@ -50,5 +48,23 @@ module.exports = class TrayMenu extends Tray {
       { type: 'separator' },
       { label: 'Quit', click: () => this.events.emit('quit') }
     ]));
+  }
+
+  addDevice(device) {
+    if (this.devices.find((dev) => dev.uuid === device.uuid)) {
+      return;
+    }
+    this.devices.push(device);
+    this.updateDevices();
+    debug('device added to tray');
+  }
+
+  removeDevice(uuid) {
+    if (!this.devices.find((dev) => dev.uuid == uuid)) {
+      return;
+    }
+    this.devices = this.devices.filter((dev) => dev.uuid !== uuid);
+    this.updateDevices();
+    debug('device remove from tray');
   }
 };
