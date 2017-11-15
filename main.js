@@ -42,7 +42,7 @@ app.on('ready', () => {
   });
 
   discovery.onDiscover((device) => {
-    wscomm.connectDevice(device);
+    wscomm.connectToDevice(device);
   });
 
   wscomm.onDeviceConnected((device) => {
