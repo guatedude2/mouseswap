@@ -12,22 +12,23 @@ let tray = null;
 debug(`starting mouseswap VERSION:${packageJson.version}`);
 
 const settings = {
-  uuid: '0fade7e0-2211-4ba4-a4e8-1ca6a961c4eb',
   version: packageJson.version,
-  name: `${system.getUserFullName()}'s ${system.getComputerName()}`,
   networkInterface: 'en0',
-  port: 18000
+  port: 18000,
+  device: {
+    uuid: 'mac-pro',//'0fade7e0-2211-4ba4-a4e8-1ca6a961c4eb',
+    name: `${system.getUserFullName()}'s ${system.getComputerName()}`,
+    ip: '127.0.0.1'
+  }
 };
+
+const {port, device } = settings;
 
 // app.dock.hide();
 app.on('ready', () => {
   tray = new TrayMenu();
 
-  tray.addDevice({
-    uuid: settings.uuid,
-    name: settings.name,
-    ip: '127.0.0.1'
-  });
+  tray.addDevice(settings.device);
 
   tray.onDeviceSelected((item) => {
     wscomm.broadcastSwap(item.uuid);
@@ -53,8 +54,8 @@ app.on('ready', () => {
     tray.removeDevice(device);
   });
 
-  discovery.start(settings);
-  wscomm.listen(settings);
+  discovery.start(settings, device);
+  wscomm.listen(port, device);
 });
 
 app.on('quit', () => {
