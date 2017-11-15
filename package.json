@@ -1,0 +1,17 @@
+{
+  "name": "mouseswap",
+  "version": "0.0.0",
+  "description": "Utility for switching computers using the same bluetooth mouse and keyboard",
+  "main": "main.js",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Alejandro Gonzalez Sole <agonzalez@jagssoft.com>",
+  "scripts": {
+    "start": "electron .",
+    "dev": "nodemon --exec \"electron .\""
+  },
+  "dependencies": {
+    "electron": "^1.7.9",
+    "node-ssdp": "^3.2.5"
+  }
+}
