@@ -24,6 +24,7 @@ app.on('ready', () => {
   tray = new TrayMenu();
 
   tray.onDeviceSelected((item) => {
+    wscomm.broadcastSwap(item.uuid);
     console.log('selected', item)
   });
 
@@ -36,6 +37,7 @@ app.on('ready', () => {
   });
 
   ssdp.onDiscover((device) => {
+    wscomm.addDevice(device);
     tray.addDevice(device);
   });
 
