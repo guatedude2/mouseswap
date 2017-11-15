@@ -1,6 +1,6 @@
 const debug = require('debug')('mouseswap');
 const { app } = require('electron');
-const ssdp = require('./lib/ssdp');
+const discovery = require('./lib/discovery');
 const wscomm = require('./lib/wscomm');
 // const bluetooth = require('./lib/bluetooth');
 const system = require('./util/system');
@@ -23,9 +23,14 @@ const settings = {
 app.on('ready', () => {
   tray = new TrayMenu();
 
+  tray.addDevice({
+    uuid: settings.uuid,
+    name: settings.name,
+    ip: '127.0.0.1'
+  });
+
   tray.onDeviceSelected((item) => {
     wscomm.broadcastSwap(item.uuid);
-    console.log('selected', item)
   });
 
   tray.onOpenPreferences(() => {
@@ -36,15 +41,33 @@ app.on('ready', () => {
     app.quit();
   });
 
-  ssdp.onDiscover((device) => {
-    wscomm.addDevice(device);
+  discovery.onDiscover((device) => {
+    wscomm.connectDevice(device);
+  });
+
+  wscomm.onDeviceConnected((device) => {
     tray.addDevice(device);
   });
 
-  ssdp.start(settings);
-  wscomm.listen(settings.port);
+  wscomm.onDeviceDisconnected((device) => {
+    tray.removeDevice(device);
+  });
+
+  discovery.start(settings);
+  wscomm.listen(settings);
 });
 
 app.on('quit', () => {
-  ssdp.stop();
+  discovery.stop();
+});
+
+
+process.on('SIGINT',() => {
+  if (!this.bus) {
+    process.exit(0);
+  }
+  debug('recieved SIGINT stopping bus');
+  discovery.stop(error => {
+    process.exit(error ? 1 : 0);
+  });
 });
