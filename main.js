@@ -28,8 +28,6 @@ app.on('ready', () => {
   tray.onQuit(() => {
     app.quit();
   });
-
-  ssdp.scan();
 });
 
 app.on('quit', () => {
