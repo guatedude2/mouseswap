@@ -2,7 +2,7 @@ const debug = require('debug')('mouseswap');
 const { app } = require('electron');
 const discovery = require('./lib/discovery');
 const wscomm = require('./lib/wscomm');
-// const bluetooth = require('./lib/bluetooth');
+const bluetooth = require('./lib/bluetooth');
 const system = require('./util/system');
 const TrayMenu = require('./tray');
 const packageJson = require('./package.json');
@@ -55,11 +55,11 @@ app.on('ready', () => {
   });
 
   wscomm.onActivate(() => {
-    console.log('TURN BLUETOOTH ON');
+    bluetooth.on();
   });
 
   wscomm.onDeactivate(() => {
-    console.log('TURN BLUETOOTH OFF');
+    bluetooth.off();
   });
 
   discovery.start(settings, device);
