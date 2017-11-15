@@ -54,6 +54,14 @@ app.on('ready', () => {
     tray.removeDevice(device);
   });
 
+  wscomm.onActivate(() => {
+    console.log('TURN BLUETOOTH ON');
+  });
+
+  wscomm.onDeactivate(() => {
+    console.log('TURN BLUETOOTH OFF');
+  });
+
   discovery.start(settings, device);
   wscomm.listen(port, device);
 });
