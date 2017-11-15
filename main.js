@@ -1,7 +1,7 @@
-
+const debug = require('debug')('mouseswap');
 const { app } = require('electron');
 const ssdp = require('./lib/ssdp');
-const wscom = require('./lib/wscom');
+const wscomm = require('./lib/wscomm');
 // const bluetooth = require('./lib/bluetooth');
 const system = require('./util/system');
 const TrayMenu = require('./tray');
@@ -9,8 +9,9 @@ const packageJson = require('./package.json');
 
 let tray = null;
 
+debug(`starting mouseswap VERSION: ${packageJson.version}`);
+
 const settings = {
-  ip: '127.0.0.1',
   uuid: '0fade7e0-2211-4ba4-a4e8-1ca6a961c4eb',
   version: packageJson.version,
   name: `${system.getUserFullName()}'s ${system.getComputerName()}`,
@@ -39,7 +40,7 @@ app.on('ready', () => {
   });
 
   ssdp.start(settings);
-  wscom.listen(settings.port);
+  wscomm.listen(settings.port);
 });
 
 app.on('quit', () => {
